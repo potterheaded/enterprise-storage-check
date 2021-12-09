@@ -55,7 +55,6 @@ done
 image="ghcr.io/github-technology-partners/enterprise-storage-check/actions-console:latest"
 
 if [[ -z "$connection_string" ]]; then
-  echo -e "${ORANGE}Starting interactive shell...${NC}"
   pwsh_params+=("-NoExit")
   docker_params+=("-it")
 else
@@ -96,8 +95,10 @@ docker_run() {
 
 # Launch the Actions console.
 if [[ -z "$command" ]]; then
+  echo -e "${ORANGE}Starting interactive shell...${NC}"
   docker_run
 else
+  echo -e "${GREEN}Running storage tests...${NC}"
   # sed commands make the LightRail output more readable.
   docker_run | sed 's/      \+/\n/g' | sed 's/    //g' | sed "s/^/LR actions> /"
   exit "${PIPESTATUS[0]}"
