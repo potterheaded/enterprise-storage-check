@@ -1,18 +1,28 @@
 #!/bin/bash
-#/ Usage: ghe-actions-console [-ch]
+#/ Usage: ghe-storage-test.sh [-pch]
 #/
-#/ Opens an interactive console to a GitHub Actions service.  Only use this
-#/ command if directed by GitHub Enterprise support.
+#/ Runs storage provider tests for the provider blob storage endpoint.
+#/
+#/ If no parameters are specified it opens interactive shell. Only use this
+#/ mode if directed by GitHub Enterprise support.
 #/
 #/ OPTIONS:
-#/   -c | --command     LightRail command to run, leave out this arg for an
-#/                      interactive console
+#/   -p | --provider    Storage provider, one of 's3' or 'azure'
+#/   -c | --connection-string    Connection string to the blob storage
 #/   -h | --help        Show this message
 #/
 set -e
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
 # Default options
 command=
+provider=
+connection_string=
 pwsh_params=()
 docker_params=()
 env_vars=()
@@ -24,8 +34,12 @@ usage() {
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    -c|--command)
-      command="$2"
+    -p|--provider)
+      provider="$2"
+      shift 2
+      ;;
+    -c|--connection-string)
+      connection_string="$2"
       shift 2
       ;;
     -h|--help)
@@ -38,12 +52,19 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-if [[ -z "$command" ]]; then
+image="containers.pkg.github.com/github-technology-partners/enterprise-storage-check/actions-console:latest"
+
+if [[ -z "$connection_string" ]]; then
+  echo -e "${ORANGE}Starting interactive shell...${NC}"
   pwsh_params+=("-NoExit")
   docker_params+=("-it")
+else
+  if [[ -z "$provider" ]]; then
+    echo -e "${RED}Storage provider must be specified with '-p' parameter${NC}"
+    exit 1
+  fi
+  command="Test-StorageConnection -OverrideBlobProvider $provider -OverrideConnectionString '$connection_string'"
 fi
-
-image="containers.pkg.github.com/github/actions/actions-console:main"
 
 docker_params+=("--mount" "type=tmpfs,destination=/home/actions/.actions-dev")
 docker_params+=("--mount" "type=tmpfs,destination=/LR/Logs")
