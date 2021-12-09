@@ -1,5 +1,5 @@
 #!/bin/bash
-#/ Usage: ghe-storage-test.sh [-pch]
+#/ Usage: ghe-storage-test.sh [-pcvh]
 #/
 #/ Runs storage provider tests for the provider blob storage endpoint.
 #/
@@ -9,6 +9,7 @@
 #/ OPTIONS:
 #/   -p | --provider    Storage provider, one of 's3' or 'azure'
 #/   -c | --connection-string    Connection string to the blob storage
+#/   -v | --version     GHES version (e.g. '3.3'), if omitted uses the latest released one
 #/   -h | --help        Show this message
 #/
 set -e
@@ -20,6 +21,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Default options
+tag="latest"
 command=
 provider=
 connection_string=
@@ -42,6 +44,10 @@ while [ $# -gt 0 ]; do
       connection_string="$2"
       shift 2
       ;;
+    -v|--version)
+      tag="ghes-$2"
+      shift 2
+      ;;
     -h|--help)
       usage
       ;;
@@ -52,7 +58,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-image="ghcr.io/github-technology-partners/enterprise-storage-check/actions-console:latest"
+image="ghcr.io/github-technology-partners/enterprise-storage-check/actions-console:$tag"
 
 if [[ -z "$connection_string" ]]; then
   pwsh_params+=("-NoExit")
