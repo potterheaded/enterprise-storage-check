@@ -52,7 +52,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-image="ghcr.io/github-technology-partners/actions-console:latest"
+image="ghcr.io/github-technology-partners/enterprise-storage-check/actions-console:latest"
 
 if [[ -z "$connection_string" ]]; then
   echo -e "${ORANGE}Starting interactive shell...${NC}"
