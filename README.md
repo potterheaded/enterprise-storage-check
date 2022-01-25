@@ -9,6 +9,10 @@ Currently not covered:
 - Direct download links from the storage, used for Artifact Cache
 - Packages
 
+## Permissions used
+
+The current permissions used are covered in the GitHub documentation here: https://docs.github.com/en/enterprise-server/admin/github-actions/enabling-github-actions-for-github-enterprise-server/enabling-github-actions-with-amazon-s3-storage and map to APIs within AWS: https://docs.aws.amazon.com/s3/index.html
+
 ## Usage
 
 You can use this repository as a codespace, or locally using the following commands.
