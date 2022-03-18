@@ -9,6 +9,8 @@ Currently not covered:
 - Direct download links from the storage, used for Artifact Cache
 - Packages
 
+This test is for checking compatibility only, and will not run any scale testing.
+
 ## Permissions used
 
 The current permissions used are covered in the GitHub documentation here: https://docs.github.com/en/enterprise-server/admin/github-actions/enabling-github-actions-for-github-enterprise-server/enabling-github-actions-with-amazon-s3-storage and map to APIs within AWS: https://docs.aws.amazon.com/s3/index.html
@@ -21,8 +23,10 @@ You can use this repository as a codespace, or locally using the following comma
 
 ```
 docker login ghcr.io/github-technology-partners
-./ghe-storage-test.sh -p s3 -c "BucketName=github-actions-storage-test;AccessKeyId=$AWS_ACCESS_KEY_ID;SecretAccessKey=$AWS_SECRET_KEY;ServiceUrl=https://s3.us-east-1.amazonaws.com;PathPrefix=actions-l2"
+./ghe-storage-test.sh -p s3 -v 3.4 \
+  -c "BucketName=github-actions-storage-test;AccessKeyId=$AWS_ACCESS_KEY_ID;SecretAccessKey=$AWS_SECRET_KEY;ServiceUrl=https://s3.us-east-1.amazonaws.com;PathPrefix=actions-l2"
 ```
+NOTE: If you are using a self-signed certificate on your S3 Object store service in the test environment where you're running this command you may run into issues.
 
 By default container from the latest released GHES version is used. Other version may be specified using `-v` switch, e.g. `-v 3.2` 
 
