@@ -105,9 +105,9 @@ if [[ -z "$command" ]]; then
   docker_run "$command"
 else
   echo -e "${GREEN}Running storage tests...${NC}"
-  version_check_command="help Test-StorageConnection  | grep 'TreatWarningAsErrors'"
-  version_check=$(docker_run "$version_check_command")
-  if [[ ! -z "$version_check" ]]; then
+  check_warning_command="help Test-StorageConnection  | grep 'TreatWarningAsErrors'"
+  warning_check=$(docker_run "$check_warning_command")
+  if [[ ! -z "$warning_check" ]]; then
     command="${command} -TreatWarningAsErrors"
   fi
   # sed commands make the LightRail output more readable.
