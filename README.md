@@ -31,3 +31,6 @@ NOTE: If you are using a self-signed certificate on your S3 Object store service
 By default container from the latest released GHES version is used. Other version may be specified using `-v` switch, e.g. `-v 3.2` 
 
 To login to docker, you'll need a [Personal Access Token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry) with `read:package` scope.
+
+## Known Issue
+* To test GHES 3.5 use `-v 3.5.0`. `-v 3.5` won't work.
