@@ -88,6 +88,11 @@ function cleanup {
 trap cleanup EXIT
 ( IFS=$'\n'; echo "${env_vars[*]}" ) > "$temp_file"
 
+# If running ARM64, use the docker multi-arch amd64
+if [[ "$(uname -m)" == "arm64" ]]; then
+  docker_params+=("--platform" "linux/amd64")
+fi
+
 docker_run() {
   docker run \
     --rm \
