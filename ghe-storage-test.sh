@@ -29,6 +29,8 @@ pwsh_params=()
 docker_params=()
 env_vars=()
 
+versionParts=()
+
 usage() {
     grep '^#/' < "$0" | cut -c 4-
     exit 2
@@ -45,6 +47,11 @@ while [ $# -gt 0 ]; do
       shift 2
       ;;
     -v|--version)
+      while IFS='.' read -ra part; do
+        for i in "${part[@]}"; do
+          versionParts+=("$i")
+        done
+      done <<< "$2"
       tag="ghes-$2"
       shift 2
       ;;
@@ -68,7 +75,11 @@ else
     echo -e "${RED}Storage provider must be specified with '-p' parameter${NC}"
     exit 1
   fi
-  command="Test-StorageConnection -OverrideBlobProvider $provider -OverrideConnectionString '$connection_string' -TreatWarningAsErrors"
+  command="Test-StorageConnection -OverrideBlobProvider $provider -OverrideConnectionString '$connection_string'"
+  # add -TreatWarningAsErrors if version >= 3.5
+  if [[ ${versionParts[0]} -ge 3 && ${versionParts[1]} -ge 5 ]]; then
+    command="$command -TreatWarningAsErrors"
+  fi
 fi
 
 docker_params+=("--mount" "type=tmpfs,destination=/home/actions/.actions-dev")
