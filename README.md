@@ -8,6 +8,7 @@ Currently covered:
 
 Currently not covered:
 - Packages
+- OIDC authentication based storage check
 
 This test is for checking compatibility only, and will not run any scale testing.
 
